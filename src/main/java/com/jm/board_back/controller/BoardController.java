@@ -2,16 +2,14 @@ package com.jm.board_back.controller;
 
 import com.jm.board_back.customAnnotation.TimeTraceAnnotation;
 import com.jm.board_back.dto.request.board.PostBoardRequestDto;
+import com.jm.board_back.dto.response.board.GetBoardResponseDto;
 import com.jm.board_back.dto.response.board.PostBoardResponseDto;
 import com.jm.board_back.service.BoardService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @TimeTraceAnnotation
 @RestController
@@ -19,6 +17,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
+
+    @GetMapping("/{boardNumber}")
+    public ResponseEntity<? super GetBoardResponseDto> getBoard(@PathVariable("boardNumber") Integer boardNumber) {
+        return boardService.getBoard(boardNumber);
+    }
 
     /**
      * 게시물 등록

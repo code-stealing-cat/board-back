@@ -3,12 +3,14 @@ package com.jm.board_back.service.implement;
 import com.jm.board_back.customAnnotation.TimeTraceAnnotation;
 import com.jm.board_back.dto.request.board.PostBoardRequestDto;
 import com.jm.board_back.dto.response.ResponseDto;
+import com.jm.board_back.dto.response.board.GetBoardResponseDto;
 import com.jm.board_back.dto.response.board.PostBoardResponseDto;
 import com.jm.board_back.entity.BoardEntity;
 import com.jm.board_back.entity.ImageEntity;
 import com.jm.board_back.repository.BoardRepository;
 import com.jm.board_back.repository.ImageRepository;
 import com.jm.board_back.repository.UserRepository;
+import com.jm.board_back.repository.resultSet.GetBoardResultSet;
 import com.jm.board_back.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +29,28 @@ public class BoardServiceImplement implements BoardService {
     private final BoardRepository boardRepository;
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
+
+    @Override
+    public ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber) {
+
+        GetBoardResultSet resultSet = null;
+        List<ImageEntity> imageEntities = new ArrayList<>();
+        try {
+            resultSet = boardRepository.getBoard(boardNumber);
+            if (resultSet == null) return GetBoardResponseDto.notExistBoard();
+
+            imageEntities = imageRepository.findByBoardNumber(boardNumber);
+
+            // 조회수 증가
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            boardEntity.increaseViewCount();
+            boardRepository.save(boardEntity);
+        } catch (Exception exception) {
+            log.error("게시물 상세 가져오기 오류", exception);
+            return ResponseDto.databaseError();
+        }
+        return GetBoardResponseDto.success(resultSet, imageEntities);
+    }
 
     /**
      * 게시물 등록
