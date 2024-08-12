@@ -2,19 +2,16 @@ package com.jm.board_back.service.implement;
 
 import com.jm.board_back.customAnnotation.TimeTraceAnnotation;
 import com.jm.board_back.dto.request.board.PostBoardRequestDto;
+import com.jm.board_back.dto.request.board.PostCommentRequestDto;
 import com.jm.board_back.dto.response.ResponseDto;
-import com.jm.board_back.dto.response.board.GetBoardResponseDto;
-import com.jm.board_back.dto.response.board.GetFavoriteListResponseDto;
-import com.jm.board_back.dto.response.board.PostBoardResponseDto;
-import com.jm.board_back.dto.response.board.PutFavoriteResponseDto;
+import com.jm.board_back.dto.response.board.*;
 import com.jm.board_back.entity.BoardEntity;
+import com.jm.board_back.entity.CommentEntity;
 import com.jm.board_back.entity.FavoriteEntity;
 import com.jm.board_back.entity.ImageEntity;
-import com.jm.board_back.repository.BoardRepository;
-import com.jm.board_back.repository.FavoriteRepository;
-import com.jm.board_back.repository.ImageRepository;
-import com.jm.board_back.repository.UserRepository;
+import com.jm.board_back.repository.*;
 import com.jm.board_back.repository.resultSet.GetBoardResultSet;
+import com.jm.board_back.repository.resultSet.GetCommentListResultSet;
 import com.jm.board_back.repository.resultSet.GetFavoriteListResultSet;
 import com.jm.board_back.service.BoardService;
 import lombok.RequiredArgsConstructor;
@@ -35,6 +32,7 @@ public class BoardServiceImplement implements BoardService {
     private final ImageRepository imageRepository;
     private final UserRepository userRepository;
     private final FavoriteRepository favoriteRepository;
+    private final CommentRepository commentRepository;
 
     /**
      * 게시물 상세
@@ -86,6 +84,21 @@ public class BoardServiceImplement implements BoardService {
         return GetFavoriteListResponseDto.success(resultSets);
     }
 
+    @Override
+    public ResponseEntity<? super GetCommentListResponseDto> getCommentList(Integer boardNumber) {
+        List<GetCommentListResultSet> resultSets = new ArrayList<>();
+        try {
+            boolean existedBoard = boardRepository.existsByBoardNumber(boardNumber);
+            if(!existedBoard) return GetCommentListResponseDto.noExistBoard();
+
+            resultSets = commentRepository.getCommentList(boardNumber);
+        } catch (Exception exception) {
+            log.error("댓글 목록 불러오기 오류", exception);
+            return ResponseDto.databaseError();
+        }
+        return GetCommentListResponseDto.success(resultSets);
+    }
+
     /**
      * 게시물 등록
      *
@@ -122,6 +135,28 @@ public class BoardServiceImplement implements BoardService {
             return ResponseDto.databaseError();
         }
         return PostBoardResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Integer boardNumber, String email) {
+        try {
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            if (boardEntity == null) return PostCommentResponseDto.noExistBoard();
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser) return PostCommentResponseDto.noExistUser();
+
+            CommentEntity commentEntity = new CommentEntity(dto, boardNumber, email);
+            commentRepository.save(commentEntity);
+
+            boardEntity.increaseCommentCount();
+            boardRepository.save(boardEntity);
+
+        } catch (Exception exception) {
+            log.error("댓글 등록 오류", exception);
+            return ResponseDto.databaseError();
+        }
+        return PostCommentResponseDto.success();
     }
 
     /**

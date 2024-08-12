@@ -71,7 +71,7 @@ public class FileServiceImplement implements FileService {
         try {
             resource = new UrlResource("file:" + filePath + fileName);
         } catch (Exception exception) {
-            log.error("이미지 불러오기 실패", exception);
+            log.error("이미지 불러오기 오류", exception);
             return null;
         }
         return resource;
