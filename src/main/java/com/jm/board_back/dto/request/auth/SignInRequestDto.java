@@ -4,7 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import lombok.ToString;
 
 /**
  * 로그인할 때 사용자가 서버로 보낼 데이터의 객체 형태

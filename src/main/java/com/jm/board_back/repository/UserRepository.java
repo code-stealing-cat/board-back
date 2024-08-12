@@ -3,7 +3,6 @@ package com.jm.board_back.repository;
 import com.jm.board_back.entity.UserEntity;
 import jakarta.persistence.QueryHint;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.jpa.repository.QueryHints;
 import org.springframework.stereotype.Repository;
 

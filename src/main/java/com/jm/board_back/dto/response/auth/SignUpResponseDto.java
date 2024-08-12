@@ -1,13 +1,11 @@
 package com.jm.board_back.dto.response.auth;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-
 import com.jm.board_back.common.ResponseCode;
 import com.jm.board_back.common.ResponseMessage;
 import com.jm.board_back.dto.response.ResponseDto;
-
 import lombok.Getter;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 // 회원가입 요청시 응답내용이 담긴 객체
 @Getter

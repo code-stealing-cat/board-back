@@ -10,10 +10,14 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BoardRepository extends JpaRepository<BoardEntity, Integer> {
+    @QueryHints({@QueryHint(name = "org.hibernate.comment", value = "existsByBoardNumber")})
+    boolean existsByBoardNumber(Integer boardNumber);
+
     @QueryHints({@QueryHint(name = "org.hibernate.comment", value = "getBoard")})
-    @Query(value = "SELECT B.board_number AS boardNumber, B.title AS title, B.content AS content, B.write_datetime AS writeDateTime, B.writer_email AS writerEmail, U.nickname AS writerNickname, U.profile_image AS writerProfileImage FROM board.board as B INNER JOIN `user` as U ON B.writer_email = U.email WHERE board_number = ?1 ", nativeQuery = true)
+    @Query(value = "SELECT B.board_number AS boardNumber, B.title AS title, B.content AS content, B.write_datetime AS writeDateTime, B.writer_email AS writerEmail, U.nickname AS writerNickname, U.profile_image AS writerProfileImage FROM board as B INNER JOIN `user` as U ON B.writer_email = U.email WHERE board_number = ?1 ", nativeQuery = true)
     GetBoardResultSet getBoard(Integer boardNumber);
 
     @QueryHints({@QueryHint(name = "org.hibernate.comment", value = "findByBoardNumber")})
     BoardEntity findByBoardNumber(Integer boardNumber);
+
 }

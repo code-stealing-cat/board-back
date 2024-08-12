@@ -44,7 +44,7 @@ public class FileServiceImplement implements FileService {
             if (dir.mkdirs()) {
                 log.info("디렉토리 생성: {}", filePath);
             } else {
-                log.error("디렉토리 생성 실패: {}", filePath);
+                log.info("디렉토리 생성 실패: {}", filePath);
                 return null;
             }
         }

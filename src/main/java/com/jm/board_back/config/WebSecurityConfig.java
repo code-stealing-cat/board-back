@@ -1,6 +1,5 @@
 package com.jm.board_back.config;
 
-import com.jm.board_back.customAnnotation.TimeTraceAnnotation;
 import com.jm.board_back.filter.JwtAuthenticationFilter;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -58,7 +57,7 @@ public class WebSecurityConfig {
                 .httpBasic(HttpBasicConfigurer::disable)
                 .sessionManagement(sessionManagement -> sessionManagement
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(requset -> requset
+                .authorizeHttpRequests(request -> request
                         .requestMatchers("/", "/api/v1/auth/**", "/api/v1/search/**", "/file/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/v1/board/**", "/api/v1/user/*").permitAll()
                         .anyRequest().authenticated()

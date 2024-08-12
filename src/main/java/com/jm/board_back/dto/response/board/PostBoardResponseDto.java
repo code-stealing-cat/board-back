@@ -7,12 +7,16 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
+/**
+ * 게시물 등록 응답 Dto 객체
+ */
 @Getter
 public class PostBoardResponseDto extends ResponseDto {
     private PostBoardResponseDto() {
         super(ResponseCode.SUCCESS, ResponseMessage.SUCCESS);
     }
 
+    // 성공
     public static ResponseEntity<PostBoardResponseDto> success() {
         PostBoardResponseDto result = new PostBoardResponseDto();
         return ResponseEntity.status(HttpStatus.OK).body(result);
