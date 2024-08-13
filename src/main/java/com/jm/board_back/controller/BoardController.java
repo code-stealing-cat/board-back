@@ -48,7 +48,6 @@ public class BoardController {
      *
      * @param requestBody 사용자가 게시물 등록을 위해 작성한 데이터
      * @param email       사용자 이메일
-     * @return PostBoardResponseDto
      */
     @PostMapping("")
     public ResponseEntity<? super PostBoardResponseDto> postBoard(@RequestBody @Valid PostBoardRequestDto requestBody, @AuthenticationPrincipal String email) {
@@ -58,10 +57,9 @@ public class BoardController {
     /**
      * 댓글 작성
      *
-     * @param requestBody
-     * @param boardNumber
-     * @param email
-     * @return
+     * @param requestBody 사용자가 작성한 댓글 내용
+     * @param boardNumber 작성할 댓글에 대한 게시물
+     * @param email       댓글 작성자 이메일
      */
     @PostMapping("/{boardNumber}/comment")
     public ResponseEntity<? super PostCommentResponseDto> postComment(@RequestBody @Valid PostCommentRequestDto requestBody, @PathVariable("boardNumber") Integer boardNumber, @AuthenticationPrincipal String email) {
@@ -73,7 +71,6 @@ public class BoardController {
      *
      * @param boardNumber 게시물 번호
      * @param email       사용자 이메일
-     * @return PutFavoriteResponseDto
      */
     @PutMapping("/{boardNumber}/favorite")
     public ResponseEntity<? super PutFavoriteResponseDto> putFavorite(@PathVariable("boardNumber") Integer boardNumber, @AuthenticationPrincipal String email) {

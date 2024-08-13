@@ -89,7 +89,7 @@ public class BoardServiceImplement implements BoardService {
         List<GetCommentListResultSet> resultSets = new ArrayList<>();
         try {
             boolean existedBoard = boardRepository.existsByBoardNumber(boardNumber);
-            if(!existedBoard) return GetCommentListResponseDto.noExistBoard();
+            if (!existedBoard) return GetCommentListResponseDto.noExistBoard();
 
             resultSets = commentRepository.getCommentList(boardNumber);
         } catch (Exception exception) {
@@ -137,6 +137,14 @@ public class BoardServiceImplement implements BoardService {
         return PostBoardResponseDto.success();
     }
 
+    /**
+     * 댓글 작성
+     *
+     * @param dto         사용자가 작성한 댓글 내용
+     * @param boardNumber 작성할 댓글에 대한 게시물
+     * @param email       댓글 작성자 이메일
+     * @return PostCommentResponseDto
+     */
     @Override
     public ResponseEntity<? super PostCommentResponseDto> postComment(PostCommentRequestDto dto, Integer boardNumber, String email) {
         try {
