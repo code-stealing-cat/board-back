@@ -48,14 +48,9 @@ public class BoardServiceImplement implements BoardService {
         List<ImageEntity> imageEntities = new ArrayList<>();
         try {
             resultSet = boardRepository.getBoard(boardNumber);
-            if (resultSet == null) return GetBoardResponseDto.notExistBoard();
+            if (resultSet == null) return GetBoardResponseDto.noExistBoard();
 
             imageEntities = imageRepository.findByBoardNumber(boardNumber);
-
-            // 조회수 증가
-            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
-            boardEntity.increaseViewCount();
-            boardRepository.save(boardEntity);
         } catch (Exception exception) {
             log.error("게시물 상세 가져오기 오류", exception);
             return ResponseDto.databaseError();
@@ -205,5 +200,45 @@ public class BoardServiceImplement implements BoardService {
             return ResponseDto.databaseError();
         }
         return PutFavoriteResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(Integer boardNumber) {
+        try {
+            // 조회수 증가
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            if (boardEntity == null) return IncreaseViewCountResponseDto.noExistBoard();
+
+            boardEntity.increaseViewCount();
+            boardRepository.save(boardEntity);
+        } catch (Exception exception) {
+            log.error("좋아요 증가 오류", exception);
+            return ResponseDto.databaseError();
+        }
+        return IncreaseViewCountResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(Integer boardNumber, String email) {
+        try {
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser) return DeleteBoardResponseDto.noExistUser();
+
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            if (boardEntity == null) return DeleteBoardResponseDto.noExistBoard();
+
+            String writerEmail = boardEntity.getWriterEmail();
+            boolean isWriter = writerEmail.equals(email);
+            if (!isWriter) return DeleteBoardResponseDto.noPermission();
+
+            imageRepository.deleteByBoardNumber(boardNumber);
+            commentRepository.deleteByBoardNumber(boardNumber);
+            favoriteRepository.deleteByBoardNumber(boardNumber);
+            boardRepository.delete(boardEntity);
+        } catch (Exception exception) {
+            log.error("게시물 삭제 오류", exception);
+            return ResponseDto.databaseError();
+        }
+        return DeleteBoardResponseDto.success();
     }
 }

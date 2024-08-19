@@ -23,4 +23,10 @@ public interface BoardService {
 
     // 좋아요
     ResponseEntity<? super PutFavoriteResponseDto> putFavorite(Integer boardNumber, String email);
+
+    // 조회수 증가
+    ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(Integer boardNumber);
+
+    // 게시물 삭제
+    ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(Integer boardNumber, String email);
 }

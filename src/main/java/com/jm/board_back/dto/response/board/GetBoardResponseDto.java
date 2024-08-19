@@ -65,7 +65,7 @@ public class GetBoardResponseDto extends ResponseDto {
     }
 
     // 존재하지 않는 게시물
-    public static ResponseEntity<ResponseDto> notExistBoard() {
+    public static ResponseEntity<ResponseDto> noExistBoard() {
         ResponseDto result = new ResponseDto(ResponseCode.NOT_EXISTED_BOARD, ResponseMessage.NOT_EXISTED_BOARD);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(result);
     }

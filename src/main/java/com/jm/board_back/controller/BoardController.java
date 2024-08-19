@@ -43,6 +43,11 @@ public class BoardController {
         return boardService.getCommentList(boardNumber);
     }
 
+    @GetMapping("/{boardNumber}/increase-view-count")
+    public ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(@PathVariable("boardNumber") Integer boardNumber) {
+        return boardService.increaseViewCount(boardNumber);
+    }
+
     /**
      * 게시물 등록
      *
@@ -76,4 +81,10 @@ public class BoardController {
     public ResponseEntity<? super PutFavoriteResponseDto> putFavorite(@PathVariable("boardNumber") Integer boardNumber, @AuthenticationPrincipal String email) {
         return boardService.putFavorite(boardNumber, email);
     }
+
+    @DeleteMapping("/{boardNumber}")
+    public ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(@PathVariable("boardNumber") Integer boardNumber, @AuthenticationPrincipal String email) {
+        return boardService.deleteBoard(boardNumber, email);
+    }
+
 }
