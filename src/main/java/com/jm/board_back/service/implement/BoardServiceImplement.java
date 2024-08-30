@@ -202,13 +202,19 @@ public class BoardServiceImplement implements BoardService {
         return PutFavoriteResponseDto.success();
     }
 
+    /**
+     * 조회수 증가
+     *
+     * @param boardNumber 게시물 번호
+     * @return IncreaseViewCountResponseDto
+     */
     @Override
     public ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(Integer boardNumber) {
         try {
-            // 조회수 증가
             BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
             if (boardEntity == null) return IncreaseViewCountResponseDto.noExistBoard();
 
+            // 조회수 증가
             boardEntity.increaseViewCount();
             boardRepository.save(boardEntity);
         } catch (Exception exception) {
@@ -218,6 +224,13 @@ public class BoardServiceImplement implements BoardService {
         return IncreaseViewCountResponseDto.success();
     }
 
+    /**
+     * 게시물 삭제
+     *
+     * @param boardNumber 게시물 번호
+     * @param email       작성자 이메일
+     * @return DeleteBoardResponseDto
+     */
     @Override
     public ResponseEntity<? super DeleteBoardResponseDto> deleteBoard(Integer boardNumber, String email) {
         try {
@@ -231,9 +244,13 @@ public class BoardServiceImplement implements BoardService {
             boolean isWriter = writerEmail.equals(email);
             if (!isWriter) return DeleteBoardResponseDto.noPermission();
 
+            // 게시물 이미지 삭제
             imageRepository.deleteByBoardNumber(boardNumber);
+            // 댓글 삭제
             commentRepository.deleteByBoardNumber(boardNumber);
+            // 좋아요 삭제
             favoriteRepository.deleteByBoardNumber(boardNumber);
+            // 게시물 삭제
             boardRepository.delete(boardEntity);
         } catch (Exception exception) {
             log.error("게시물 삭제 오류", exception);
