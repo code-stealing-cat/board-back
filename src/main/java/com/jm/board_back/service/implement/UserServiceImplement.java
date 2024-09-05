@@ -30,7 +30,7 @@ public class UserServiceImplement implements UserService {
         UserEntity userEntity = null;
         try {
             userEntity = userRepository.findByEmail(email);
-            if (userEntity == null) return GetSignInUserResponseDto.notExistUser();
+            if (userEntity == null) return GetSignInUserResponseDto.noExistUser();
 
         } catch (Exception exception) {
             log.error("사용자 인증 응답 오류", exception);

@@ -44,7 +44,7 @@ public class GetSignInUserResponseDto extends ResponseDto {
      *
      * @return 존재하지 않는 사용자 코드와 메세지
      */
-    public static ResponseEntity<ResponseDto> notExistUser() {
+    public static ResponseEntity<ResponseDto> noExistUser() {
         ResponseDto result = new ResponseDto(ResponseCode.NOT_EXISTED_USER, ResponseMessage.NOT_EXISTED_USER);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(result);
     }

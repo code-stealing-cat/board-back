@@ -1,5 +1,6 @@
 package com.jm.board_back.service;
 
+import com.jm.board_back.dto.request.board.PatchBoardRequestDto;
 import com.jm.board_back.dto.request.board.PostBoardRequestDto;
 import com.jm.board_back.dto.request.board.PostCommentRequestDto;
 import com.jm.board_back.dto.response.board.*;
@@ -23,6 +24,9 @@ public interface BoardService {
 
     // 좋아요
     ResponseEntity<? super PutFavoriteResponseDto> putFavorite(Integer boardNumber, String email);
+
+    // 게시글 수정
+    ResponseEntity<? super PatchBoardResponseDto> patchBoard(PatchBoardRequestDto dto, Integer boardNumber, String email);
 
     // 조회수 증가
     ResponseEntity<? super IncreaseViewCountResponseDto> increaseViewCount(Integer boardNumber);

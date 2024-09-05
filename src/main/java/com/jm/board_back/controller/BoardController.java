@@ -1,6 +1,7 @@
 package com.jm.board_back.controller;
 
 import com.jm.board_back.customAnnotation.TimeTraceAnnotation;
+import com.jm.board_back.dto.request.board.PatchBoardRequestDto;
 import com.jm.board_back.dto.request.board.PostBoardRequestDto;
 import com.jm.board_back.dto.request.board.PostCommentRequestDto;
 import com.jm.board_back.dto.response.board.*;
@@ -80,6 +81,11 @@ public class BoardController {
     @PutMapping("/{boardNumber}/favorite")
     public ResponseEntity<? super PutFavoriteResponseDto> putFavorite(@PathVariable("boardNumber") Integer boardNumber, @AuthenticationPrincipal String email) {
         return boardService.putFavorite(boardNumber, email);
+    }
+
+    @PatchMapping("/{boardNumber}")
+    public ResponseEntity<? super PatchBoardResponseDto> patchBoard(@RequestBody @Valid PatchBoardRequestDto requestBody, @PathVariable("boardNumber") Integer boardNumber, @AuthenticationPrincipal String email) {
+        return boardService.patchBoard(requestBody, boardNumber, email);
     }
 
     @DeleteMapping("/{boardNumber}")

@@ -1,6 +1,7 @@
 package com.jm.board_back.service.implement;
 
 import com.jm.board_back.customAnnotation.TimeTraceAnnotation;
+import com.jm.board_back.dto.request.board.PatchBoardRequestDto;
 import com.jm.board_back.dto.request.board.PostBoardRequestDto;
 import com.jm.board_back.dto.request.board.PostCommentRequestDto;
 import com.jm.board_back.dto.response.ResponseDto;
@@ -106,7 +107,7 @@ public class BoardServiceImplement implements BoardService {
         try {
             // 회원만 게시물을 작성할 수 있기 때문에 인증 확인 후 일치하는 사용자가 없다면 존재하지 않는 사용자 반환
             boolean existedEmail = userRepository.existsByEmail(email);
-            if (!existedEmail) return PostBoardResponseDto.notExistUser();
+            if (!existedEmail) return PostBoardResponseDto.noExistUser();
 
             BoardEntity boardEntity = new BoardEntity(dto, email);
             boardRepository.save(boardEntity);
@@ -200,6 +201,38 @@ public class BoardServiceImplement implements BoardService {
             return ResponseDto.databaseError();
         }
         return PutFavoriteResponseDto.success();
+    }
+
+    @Override
+    public ResponseEntity<? super PatchBoardResponseDto> patchBoard(PatchBoardRequestDto dto, Integer boardNumber, String email) {
+        try {
+            BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+            if (boardEntity == null) return PatchBoardResponseDto.noExistBoard();
+
+            boolean existedUser = userRepository.existsByEmail(email);
+            if (!existedUser) return PatchBoardResponseDto.noExistUser();
+
+            String writerEmail = boardEntity.getWriterEmail();
+            boolean isWriter = writerEmail.equals(email);
+            if (!isWriter) return PatchBoardResponseDto.noPermission();
+
+            boardEntity.patchBoard(dto);
+            boardRepository.save(boardEntity);
+
+            imageRepository.deleteByBoardNumber(boardNumber);
+            List<String> boardImageList = dto.getBoardImageList();
+            List<ImageEntity> imageEntities = new ArrayList<>();
+
+            for (String image : boardImageList) {
+                ImageEntity imageEntity = new ImageEntity(boardNumber, image);
+                imageEntities.add(imageEntity);
+            }
+            imageRepository.saveAll(imageEntities);
+        } catch (Exception exception) {
+            log.error("게시글 수정 오류", exception);
+            return ResponseDto.databaseError();
+        }
+        return PatchBoardResponseDto.success();
     }
 
     /**
