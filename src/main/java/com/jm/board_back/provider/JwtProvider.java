@@ -57,7 +57,7 @@ public class JwtProvider {
             /*
             JWT 토큰을 파싱하고 서명을 검증하여 토큰의 클레임 부분을 가져온다.
             여기서 secretKey 는 토큰을 생성할 때 사용된 비밀키이다. 이 비밀키를 사용해 토큰의 서명이 유효한지 확인한다.
-            이후 JwtAuthenticationFilter 에서 토큰에 대한 검승 후 처리를 한다.
+            이후 JwtAuthenticationFilter 에서 토큰에 대한 검증 후 처리를 한다.
              */
             claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(jwt).getBody();
         } catch (Exception exception) {
