@@ -49,6 +49,11 @@ public class BoardController {
         return boardService.increaseViewCount(boardNumber);
     }
 
+    @GetMapping("/latest-list")
+    public ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList() {
+        return boardService.getLatestBoardList();
+    }
+
     /**
      * 게시물 등록
      *

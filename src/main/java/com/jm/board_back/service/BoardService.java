@@ -16,6 +16,9 @@ public interface BoardService {
     // 댓글 목록
     ResponseEntity<? super GetCommentListResponseDto> getCommentList(Integer boardNumber);
 
+    // 최근 게시물 가져오기
+    ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList();
+
     // 게시물 등록
     ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email);
 

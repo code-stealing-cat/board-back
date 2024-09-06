@@ -6,10 +6,7 @@ import com.jm.board_back.dto.request.board.PostBoardRequestDto;
 import com.jm.board_back.dto.request.board.PostCommentRequestDto;
 import com.jm.board_back.dto.response.ResponseDto;
 import com.jm.board_back.dto.response.board.*;
-import com.jm.board_back.entity.BoardEntity;
-import com.jm.board_back.entity.CommentEntity;
-import com.jm.board_back.entity.FavoriteEntity;
-import com.jm.board_back.entity.ImageEntity;
+import com.jm.board_back.entity.*;
 import com.jm.board_back.repository.*;
 import com.jm.board_back.repository.resultSet.GetBoardResultSet;
 import com.jm.board_back.repository.resultSet.GetCommentListResultSet;
@@ -34,6 +31,7 @@ public class BoardServiceImplement implements BoardService {
     private final UserRepository userRepository;
     private final FavoriteRepository favoriteRepository;
     private final CommentRepository commentRepository;
+    private final BoardListViewRepository boardListViewRepository;
 
     /**
      * 게시물 상세
@@ -93,6 +91,18 @@ public class BoardServiceImplement implements BoardService {
             return ResponseDto.databaseError();
         }
         return GetCommentListResponseDto.success(resultSets);
+    }
+
+    @Override
+    public ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList() {
+        List<BoardListViewEntity> boardListViewEntities = new ArrayList<>();
+        try {
+            boardListViewEntities = boardListViewRepository.findByOrderByWriteDatetimeDesc();
+        } catch (Exception exception) {
+            log.error("최근 게시물 가져오기 오류", exception);
+            return ResponseDto.databaseError();
+        }
+        return GetLatestBoardListResponseDto.success(boardListViewEntities);
     }
 
     /**
