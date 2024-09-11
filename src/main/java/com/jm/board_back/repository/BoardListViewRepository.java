@@ -12,4 +12,6 @@ import java.util.List;
 public interface BoardListViewRepository extends JpaRepository<BoardListViewEntity, Integer> {
     @QueryHints({@QueryHint(name = "org.hibernate.comment", value = "findByOrderByWriteDatetimeDesc")})
     List<BoardListViewEntity> findByOrderByWriteDatetimeDesc();
+
+    List<BoardListViewEntity> findTop3ByWriteDatetimeGreaterThanOrderByFavoriteCountDescCommentCountDescViewCountDescWriteDatetimeDesc(String writeDatetime);
 }

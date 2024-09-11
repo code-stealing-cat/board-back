@@ -19,6 +19,9 @@ public interface BoardService {
     // 최근 게시물 가져오기
     ResponseEntity<? super GetLatestBoardListResponseDto> getLatestBoardList();
 
+    // top3
+    ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList();
+
     // 게시물 등록
     ResponseEntity<? super PostBoardResponseDto> postBoard(PostBoardRequestDto dto, String email);
 

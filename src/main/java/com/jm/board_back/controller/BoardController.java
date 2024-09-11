@@ -54,6 +54,11 @@ public class BoardController {
         return boardService.getLatestBoardList();
     }
 
+    @GetMapping("/top-3")
+    public ResponseEntity<? super GetTop3BoardListResponseDto> getTop3BoardList() {
+        return boardService.getTop3BoardList();
+    }
+
     /**
      * 게시물 등록
      *
